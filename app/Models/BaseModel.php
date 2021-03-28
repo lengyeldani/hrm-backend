@@ -14,7 +14,7 @@ class BaseModel extends Model
     protected $archivedAt;
     protected $updatedAt;
 
-    public function __construct($archive, $archivedAt, $updatedAt) {
+    public function __construct($archive, $archivedAt = null, $updatedAt = null) {
         $this->createdAt = new DateTime();
         $this->archive = $archive;
         $this->archivedAt = $archivedAt;

@@ -2,40 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use DateTime;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends BaseModel
+class User extends Model
 {
 
-    public function __construct(
-        $firstName,
-        $lastName,
-        $username,
-        $dateOfBirth,
-        $mothersFirstName,
-        $mothersLastName,
-        $department,
-        $zipCode,
-        $address,
-        $archive,
-        $archivedAt,
-        $updatedAt
-    ) {
-        $this->setFirstName($firstName);
-        $this->setLastName($lastName);
-        $this->setUsername($username);
-        $this->setDateOfBirth($dateOfBirth);
-        $this->setMothersFirstName($mothersFirstName);
-        $this->setMothersLastName($mothersLastName);
-        $this->setDepartment($department);
-        $this->setZipCode($zipCode);
-        $this->setAddress($address);
+    public function __construct() {
 
-        parent::__construct($archive,$archivedAt,$updatedAt);
     }
+
+    // protected $fillable = [
+    //     'firstName',
+    //     'lastName',
+    //     'username',
+    //     'dateOfBirth',
+    //     'mothersFirstName',
+    //     'mothersLastName',
+    //     'department',
+    //     'zipCode',
+    //     'address'
+    // ];
+
 
     protected $username;
     protected $firstName;
@@ -46,6 +34,52 @@ class User extends BaseModel
     protected $department;
     protected $zipCode;
     protected $address;
+    protected $createdAt;
+    protected $archive;
+    protected $archivedAt;
+    protected $updatedAt;
+
+
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setArchive($archive)
+    {
+        $this->archive = $archive;
+    }
+
+    public function setArchivedAt($archivedAt)
+    {
+        $this->archivedAt = $archivedAt;
+    }
+
+    public function getArchivedAt()
+    {
+        return $this->archivedAt;
+    }
+
+    public function getArchive()
+    {
+        return $this->archive;
+    }
+
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
     public function setUsername($username)
     {

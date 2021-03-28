@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -14,7 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = DB::table('users')->get();
+        dd($users);
+        return response($users->toJson(),200);
     }
 
     /**
@@ -25,21 +30,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $newUser = new User(
-            $request->input('firstName'),
-            $request->input('lastName'),
-            $request->input('username'),
-            $request->input('dateOfBirth'),
-            $request->input('mothersFirstName'),
-            $request->input('mothersLastName'),
-            $request->input('department'),
-            $request->input('zipCode'),
-            $request->input('address'),
-            false,
-            null,
-            null
-        );
-        $newUser->save();
+
+        $user = new User();
+        $user->firstName = $request->firstName;
+        $user->lastName = $request->lastName;
+        $user->username = $request->username;
+        $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
+        $user->mothersFirstName = $request->mothersFirstName;
+        $user->mothersLastName = $request->mothersLastName;
+        $user->department = $request->department;
+        $user->zipCode = $request->zipCode;
+        $user->address = $request->address;
+        $user->archive = false;
+        $user->archivedAt = null;
+        $user->createdAt = new DateTime();
+        $user->updatedAt = null;
+
+        $user->save();
+        return response($user,200);
     }
 
     /**
