@@ -26,9 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('zipCode');
             $table->timestamp('createdAt');
             $table->timestamp('updatedAt')->nullable();
-            $table->timestamp('archivedAt')->nullable();
-            $table->boolean('archive')->default(false);
-            $table->rememberToken();
+            $table->softDeletes();
         });
     }
 

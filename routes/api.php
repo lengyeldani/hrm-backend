@@ -19,6 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('users/index', [UserController::class, 'index']);
-Route::post('users/store', [UserController::class, 'store']);
+Route::prefix('users')->group(function (){
+    Route::get('index', [UserController::class, 'index']);
+    Route::post('store', [UserController::class, 'store']);
+    Route::get('show/{id}', [UserController::class, 'show']);
+    Route::put('update/{id}', [UserController::class, 'update']);
+    Route::delete('delete/{id}',[UserController::class, 'destroy']);
+});
 

@@ -17,9 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->get();
-        dd($users);
-        return response($users->toJson(),200);
+        $users = DB::table('users')->paginate(10);
+        return response($users,200);
     }
 
     /**
@@ -41,12 +40,10 @@ class UserController extends Controller
         $user->department = $request->department;
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
-        $user->archive = false;
-        $user->archivedAt = null;
         $user->createdAt = new DateTime();
         $user->updatedAt = null;
-
         $user->save();
+
         return response($user,200);
     }
 
@@ -58,7 +55,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = DB::table('users')->find($id);
+        return response($user, 200);
     }
 
     /**
@@ -70,7 +68,22 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        //dd($user->updatedAt);
+        $user->firstName = $request->firstName;
+        $user->lastName = $request->lastName;
+        $user->username = $request->username;
+        $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
+        $user->mothersFirstName = $request->mothersFirstName;
+        $user->mothersLastName = $request->mothersLastName;
+        $user->department = $request->department;
+        $user->zipCode = $request->zipCode;
+        $user->address = $request->address;
+        $user->updatedAt = new DateTime();
+        //dd($user);
+        $user->save();
+
+        return response($user, 200);
     }
 
     /**
@@ -81,6 +94,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+
+        User::destroy($id);
+
+
+        return response(User::find($id),200);
     }
 }

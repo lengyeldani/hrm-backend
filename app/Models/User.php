@@ -4,6 +4,7 @@ namespace App\Models;
 
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
@@ -12,6 +13,9 @@ class User extends Model
 
     }
 
+    use SoftDeletes;
+
+    public $timestamps = false;
     // protected $fillable = [
     //     'firstName',
     //     'lastName',
@@ -21,23 +25,22 @@ class User extends Model
     //     'mothersLastName',
     //     'department',
     //     'zipCode',
-    //     'address'
+    //     'address',
+    //     'updatedAt'
     // ];
 
 
-    protected $username;
-    protected $firstName;
-    protected $lastName;
-    protected $dateOfBirth;
-    protected $mothersFirstName;
-    protected $mothersLastName;
-    protected $department;
-    protected $zipCode;
-    protected $address;
-    protected $createdAt;
-    protected $archive;
-    protected $archivedAt;
-    protected $updatedAt;
+    private $username;
+    private $firstName;
+    private $lastName;
+    private $dateOfBirth;
+    private $mothersFirstName;
+    private $mothersLastName;
+    private $department;
+    private $zipCode;
+    private $address;
+    private $createdAt;
+    private $updatedAt;
 
 
 
@@ -49,26 +52,6 @@ class User extends Model
     public function getCreatedAt()
     {
         return $this->createdAt;
-    }
-
-    public function setArchive($archive)
-    {
-        $this->archive = $archive;
-    }
-
-    public function setArchivedAt($archivedAt)
-    {
-        $this->archivedAt = $archivedAt;
-    }
-
-    public function getArchivedAt()
-    {
-        return $this->archivedAt;
-    }
-
-    public function getArchive()
-    {
-        return $this->archive;
     }
 
     public function setUpdatedAt($updatedAt)
@@ -164,5 +147,9 @@ class User extends Model
     public function setDepartment($department)
     {
         $this->department = $department;
+    }
+    public function getDepartment()
+    {
+        return $this->department;
     }
 }
