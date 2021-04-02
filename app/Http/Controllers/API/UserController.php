@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
@@ -37,13 +38,14 @@ class UserController extends Controller
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;
-        $user->department = $request->department;
+        $department = Department::find($request->department);
+        $user->department()->associate($department);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->createdAt = new DateTime();
         $user->updatedAt = null;
         $user->save();
-
+        $user->refresh();
         return response($user,200);
     }
 
@@ -76,10 +78,12 @@ class UserController extends Controller
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;
-        $user->department = $request->department;
+        $department = Department::find($request->department);
+        $user->department()->associate($department);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->updatedAt = new DateTime();
+
         //dd($user);
         $user->save();
 

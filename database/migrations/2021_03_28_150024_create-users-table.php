@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->date('dateOfBirth');
             $table->string('mothersFirstName');
             $table->string('mothersLastName');
-            $table->string('department');
+            $table->foreignId('department_id');
             $table->string('address');
             $table->string('zipCode');
             $table->timestamp('createdAt');
