@@ -48,5 +48,10 @@ class User extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
 
 }

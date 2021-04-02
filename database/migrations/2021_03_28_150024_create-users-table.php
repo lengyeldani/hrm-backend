@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('department_id');
             $table->string('address');
             $table->string('zipCode');
+            $table->foreignId('role_id');
             $table->timestamp('createdAt');
             $table->timestamp('updatedAt')->nullable();
             $table->softDeletes();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Role;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
@@ -38,8 +39,10 @@ class UserController extends Controller
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;
-        $department = Department::find($request->department);
+        $department = Department::findOrFail($request->department);
         $user->department()->associate($department);
+        $role = Role::findOrFail($request->role);
+        $user->role()->associate($role);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->createdAt = new DateTime();
@@ -57,7 +60,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = DB::table('users')->find($id);
+        $user = DB::table('users')->findOrFail($id);
         return response($user, 200);
     }
 
@@ -70,7 +73,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         //dd($user->updatedAt);
         $user->firstName = $request->firstName;
         $user->lastName = $request->lastName;
@@ -78,13 +81,15 @@ class UserController extends Controller
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;
-        $department = Department::find($request->department);
+        $department = Department::findOrFail($request->department);
         $user->department()->associate($department);
+        //dd($role);
+        $role = Role::findOrFail($request->role);
+        $user->role()->associate($role);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->updatedAt = new DateTime();
 
-        //dd($user);
         $user->save();
 
         return response($user, 200);
@@ -101,7 +106,6 @@ class UserController extends Controller
 
         User::destroy($id);
 
-
-        return response(User::find($id),200);
+        return response(User::findOrFail($id),200);
     }
 }
