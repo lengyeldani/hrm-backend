@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use DateTime;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -14,6 +16,7 @@ class User extends Model
 
     }
 
+    use HasFactory;
     use SoftDeletes;
 
     public $timestamps = false;
@@ -51,6 +54,11 @@ class User extends Model
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function vacations()
+    {
+        return $this->hasMany(Vacation::class);
     }
 
 

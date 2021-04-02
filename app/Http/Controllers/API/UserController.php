@@ -74,7 +74,6 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        //dd($user->updatedAt);
         $user->firstName = $request->firstName;
         $user->lastName = $request->lastName;
         $user->username = $request->username;
@@ -83,13 +82,11 @@ class UserController extends Controller
         $user->mothersLastName = $request->mothersLastName;
         $department = Department::findOrFail($request->department);
         $user->department()->associate($department);
-        //dd($role);
         $role = Role::findOrFail($request->role);
         $user->role()->associate($role);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->updatedAt = new DateTime();
-
         $user->save();
 
         return response($user, 200);
