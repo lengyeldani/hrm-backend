@@ -35,7 +35,7 @@ class UserController extends Controller
         $user = new User();
         $user->firstName = $request->firstName;
         $user->lastName = $request->lastName;
-        $user->username = $request->username;
+        $user->username = strtoupper($request->username);
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;
@@ -76,7 +76,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->firstName = $request->firstName;
         $user->lastName = $request->lastName;
-        $user->username = $request->username;
+        $user->username = strtoupper($request->username);
         $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
         $user->mothersFirstName = $request->mothersFirstName;
         $user->mothersLastName = $request->mothersLastName;

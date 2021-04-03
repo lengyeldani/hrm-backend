@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class User extends Model
+class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
+
 
     public function __construct() {
 
@@ -45,6 +46,37 @@ class User extends Model
     private $address;
     private $createdAt;
     private $updatedAt;
+
+
+    public function getAuthIdentifier()
+    {
+        return $this->username;
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return $this->username;
+    }
+
+    public function getAuthPassword()
+    {
+        return "";
+    }
+
+    public function getRememberToken()
+    {
+
+    }
+
+    public function setRememberToken($value)
+    {
+
+    }
+
+    public function getRememberTokenName()
+    {
+        return "";
+    }
 
     public function department()
     {
