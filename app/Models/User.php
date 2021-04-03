@@ -17,7 +17,7 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 
     }
 
-    use HasFactory;
+
     use SoftDeletes;
 
     public $timestamps = false;
@@ -91,6 +91,11 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     public function vacations()
     {
         return $this->hasMany(Vacation::class);
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(Education::class);
     }
 
 

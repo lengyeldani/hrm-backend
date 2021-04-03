@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Education;
+use App\Models\EducationType;
 use App\Models\User;
-use App\Models\Vacation;
-use App\Models\VacationStatus;
 use Illuminate\Http\Request;
 
-class VacationController extends Controller
+class EducationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +17,7 @@ class VacationController extends Controller
      */
     public function index()
     {
-        return Vacation::paginate(10);
+        return Education::paginate(10);
     }
 
 
@@ -29,14 +29,15 @@ class VacationController extends Controller
      */
     public function store(Request $request)
     {
-        $vacation = new Vacation();
-        $vacation->date = $request->date;
-        $vacationStatus = VacationStatus::findOrFail(1);
-        $vacation->vacationStatus()->associate($vacationStatus);
+        $education = new Education();
+        $education->start = date('Y-m-d H:i:s',strtotime($request->start));
+        $education->end = date('Y-m-d H:i:s',strtotime($request->end));
+        $educationType = EducationType::findOrFail($request->educationType);
+        $education->educationType()->associate($educationType);
         $user = User::findOrFail($request->userId);
-        $user->vacations()->save($vacation);
+        $user->educations()->save($education);
 
-        return response($vacation,200);
+        return response($education,200);
     }
 
     /**
@@ -47,7 +48,7 @@ class VacationController extends Controller
      */
     public function show($id)
     {
-        return response(Vacation::findOrFail($id),200);
+        return response(Education::findOrFail($id),200);
     }
 
 
@@ -60,13 +61,14 @@ class VacationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $vacation = Vacation::findOrFail($id);
-        $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
-        $vacation->vacationStatus()->associate($vacationStatus);
-        $user = User::findOrFail($vacation->user_id);
-        $user->vacations()->save($vacation);
+        $education = Education::findOrFail($id);
 
-        return response($vacation,200);
+        $education->start = $request->start;
+        $education->end = $request->end;
+        $user = User::findOrFail($education->user_id);
+        $user->educations()->save($education);
+
+        return response($education,200);
     }
 
     /**

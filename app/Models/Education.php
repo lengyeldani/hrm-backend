@@ -5,20 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vacation extends Model
+class Education extends Model
 {
-    use HasFactory;
+
     public $timestamps = false;
-    protected $date;
-    protected $table = 'vacations';
+    protected $start;
+    protected $end;
+    protected $table = 'educations';
 
     public function user()
     {
        return $this->belongsTo(User::class);
     }
 
-    public function vacationStatus()
+    public function educationType()
     {
-        return $this->belongsTo(VacationStatus::class);
+        return $this->belongsTo(EducationType::class);
     }
 }

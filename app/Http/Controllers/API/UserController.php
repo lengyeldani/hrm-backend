@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -104,5 +105,10 @@ class UserController extends Controller
         User::destroy($id);
 
         return response(User::findOrFail($id),200);
+    }
+
+    public function getLoggedInUser()
+    {
+        return Auth::user();
     }
 }

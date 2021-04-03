@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VacationController;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ Route::middleware(['auth'])->group(function (){
         Route::get('show/{id}', [UserController::class, 'show']);
         Route::put('update/{id}', [UserController::class, 'update']);
         Route::delete('delete/{id}',[UserController::class, 'destroy']);
+        Route::get('loggedInUser', [UserController::class, 'getLoggedInUser']);
     });
 
     Route::prefix('vacations')->group(function (){
@@ -34,6 +36,14 @@ Route::middleware(['auth'])->group(function (){
         Route::get('show/{id}', [VacationController::class, 'show']);
         Route::put('update/{id}', [VacationController::class, 'update']);
         Route::get('showByUser/{id}', [VacationController::class, 'showByUser']);
+    });
+
+    Route::prefix('educations')->group(function (){
+        Route::get('index', [EducationController::class, 'index']);
+        Route::post('store', [EducationController::class, 'store']);
+        Route::get('show/{id}', [EducationController::class, 'show']);
+        Route::put('update/{id}', [EducationController::class, 'update']);
+        Route::get('showByUser/{id}', [EducationController::class, 'showByUser']);
     });
 });
 

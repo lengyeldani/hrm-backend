@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class VacationStatusSeeder extends Seeder
+class EducationTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,20 +14,16 @@ class VacationStatusSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('vacation_statuses')->insert([
+        DB::table('education_types')->insert([
             [
-                'name' => 'pending'
+                'name' => 'languageClass'
             ],
             [
-                'name' => 'accepted'
+                'name' => 'workEducation'
             ],
             [
-                'name' => 'declined'
-            ],
-            [
-                'name' => 'cancelled'
+                'name' => 'selfEducation'
             ]
-
         ]);
     }
 }
