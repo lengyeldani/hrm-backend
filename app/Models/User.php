@@ -20,6 +20,7 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 
     use SoftDeletes;
 
+    protected $table = 'users';
     public $timestamps = false;
     // protected $fillable = [
     //     'firstName',

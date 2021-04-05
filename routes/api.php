@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function (){
         Route::put('update/{id}', [UserController::class, 'update']);
         Route::delete('delete/{id}',[UserController::class, 'destroy']);
         Route::get('loggedInUser', [UserController::class, 'getLoggedInUser']);
+        Route::get('roles', [UserController::class, 'getUserRoles']);
+        Route::get('departments',[UserController::class,'getDepartments']);
     });
 
     Route::prefix('vacations')->group(function (){

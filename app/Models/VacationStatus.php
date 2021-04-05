@@ -10,4 +10,5 @@ class VacationStatus extends Model
     use HasFactory;
     public $timestamps = false;
     protected $name;
+    protected $table = 'vacation_statuses';
 }

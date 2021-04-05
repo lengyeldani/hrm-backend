@@ -10,4 +10,5 @@ class EducationType extends Model
     use HasFactory;
     public $timestamps = false;
     protected $name;
+    protected $table = 'education_types';
 }

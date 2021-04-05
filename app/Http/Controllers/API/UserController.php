@@ -61,7 +61,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = DB::table('users')->findOrFail($id);
+        $user = User::findOrFail($id);
         return response($user, 200);
     }
 
@@ -109,6 +109,16 @@ class UserController extends Controller
 
     public function getLoggedInUser()
     {
-        return Auth::user();
+        return response(Auth::user(),200);
+    }
+
+    public function getUserRoles()
+    {
+        return response(Role::all(),200);
+    }
+
+    public function getDepartments()
+    {
+        return response(Department::all(), 200);
     }
 }
