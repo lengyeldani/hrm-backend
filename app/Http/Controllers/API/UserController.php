@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->paginate(10);
+        $users = User::where('deleted_at', null)->paginate(10);
         return response($users,200);
     }
 
