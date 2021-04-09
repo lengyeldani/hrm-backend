@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationStatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VacationController extends Controller
 {
@@ -78,5 +79,21 @@ class VacationController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function showByUser($id)
+    {
+        return response(DB::table('vacations')->where('user_id',$id)->paginate(10),200);
+    }
+
+    public function changeVacationStatus(Request $request)
+    {
+        $vacation = Vacation::findOrFail($request->vacation_id);
+        $status= VacationStatus::findOrFail($request->status_id);
+        $vacation->vacationStatus()->associate($status);
+        $user = User::findOrFail($vacation->user_id);
+        $user->vacations()->save($vacation);
+
+        return response($vacation, 200);
     }
 }
