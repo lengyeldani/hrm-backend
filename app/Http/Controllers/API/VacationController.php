@@ -83,7 +83,9 @@ class VacationController extends Controller
 
     public function showByUser($id)
     {
-        return response(DB::table('vacations')->where('user_id',$id)->paginate(10),200);
+        $vacation = Vacation::where('user_id',$id)->paginate(10);
+
+        return response($vacation,200);
     }
 
     public function changeVacationStatus(Request $request)
@@ -95,5 +97,12 @@ class VacationController extends Controller
         $user->vacations()->save($vacation);
 
         return response($vacation, 200);
+    }
+
+    public function vacationStatuses()
+    {
+        $vacationStatuses = VacationStatus::all();
+
+        return response($vacationStatuses, 200);
     }
 }

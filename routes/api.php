@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function (){
         Route::put('update/{id}', [VacationController::class, 'update']);
         Route::get('showByUser/{id}', [VacationController::class, 'showByUser']);
         Route::post('changeVacationStatus', [VacationController::class, 'changeVacationStatus']);
+        Route::get('vacationStatuses', [VacationController::class, 'vacationStatuses']);
     });
 
     Route::prefix('educations')->group(function (){
