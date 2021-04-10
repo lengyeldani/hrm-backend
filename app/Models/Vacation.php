@@ -9,8 +9,9 @@ class Vacation extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $date;
     protected $table = 'vacations';
+    protected $id;
+    protected $date;
 
     public function user()
     {
