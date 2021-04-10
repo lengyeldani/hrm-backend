@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UserWithAllResource;
 use App\Http\Resources\VacationResource;
 use App\Models\User;
 use App\Models\Vacation;
@@ -20,7 +21,7 @@ class VacationController extends Controller
      */
     public function index()
     {
-        return response(UserResource::collection(User::paginate(10)));
+        return response(UserWithAllResource::collection(User::paginate(10)));
     }
 
 

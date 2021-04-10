@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::middleware(['auth'])->group(function (){
+//Route::middleware(['auth'])->group(function (){
     Route::prefix('users')->group(function (){
         Route::get('index', [UserController::class, 'index']);
         Route::post('store', [UserController::class, 'store']);
@@ -49,5 +49,5 @@ Route::middleware(['auth'])->group(function (){
         Route::put('update/{id}', [EducationController::class, 'update']);
         Route::get('showByUser/{id}', [EducationController::class, 'showByUser']);
     });
-});
+//});
 

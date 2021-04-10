@@ -9,7 +9,7 @@ use App\Models\Vacation;
 use App\Models\VacationCounter;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserWithAllResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -32,6 +32,8 @@ class UserResource extends JsonResource
             'zipCode'=>$this->zipCode,
             'role'=>Role::findOrFail($this->role_id),
             'vacationCounter'=>VacationCounter::where('user_id', $this->id)->get(),
+            'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
+            'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
             'createdAt'=>$this->createdAt,
             'updatedAt'=>$this->updatedAt
         ];

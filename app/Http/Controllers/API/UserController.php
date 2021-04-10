@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\VacationCounter;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,12 +45,18 @@ class UserController extends Controller
         $user->department()->associate($department);
         $role = Role::findOrFail($request->role);
         $user->role()->associate($role);
+        $vacationCounter = new VacationCounter();
+        $vacationCounter->max = $request->vacationCounter_max;
+        $vacationCounter->used = 0;
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->createdAt = new DateTime();
         $user->updatedAt = null;
         $user->save();
         $user->refresh();
+        $user->findOrFail($user->id)->vacationCounter()->save($vacationCounter);
+
+        //dd($user->with('vacation_counter')->where('user_id', $user->id));
         return response($user,200);
     }
 

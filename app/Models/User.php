@@ -3,38 +3,17 @@
 namespace App\Models;
 
 use DateTime;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
 {
-
-
-    public function __construct() {
-
-    }
-
-
     use SoftDeletes;
 
     protected $table = 'users';
     public $timestamps = false;
-    // protected $fillable = [
-    //     'firstName',
-    //     'lastName',
-    //     'username',
-    //     'dateOfBirth',
-    //     'mothersFirstName',
-    //     'mothersLastName',
-    //     'department',
-    //     'zipCode',
-    //     'address',
-    //     'updatedAt'
-    // ];
-
+    protected $appends = ['vacationCounter_max','vacationCounter_used'];
 
     private $username;
     private $firstName;
@@ -48,35 +27,14 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     private $createdAt;
     private $updatedAt;
 
-
-    public function getAuthIdentifier()
+    public function getVacationCounterMaxAttribute()
     {
-        return $this->username;
+        return $this->vacationCounter->max;
     }
 
-    public function getAuthIdentifierName()
+    public function getVacationCounterUsedAttribute()
     {
-        return $this->username;
-    }
-
-    public function getAuthPassword()
-    {
-        return "";
-    }
-
-    public function getRememberToken()
-    {
-
-    }
-
-    public function setRememberToken($value)
-    {
-
-    }
-
-    public function getRememberTokenName()
-    {
-        return "";
+        return $this->vacationCounter->used;
     }
 
     public function department()
@@ -97,6 +55,39 @@ class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
     public function educations()
     {
         return $this->hasMany(Education::class);
+    }
+
+    public function vacationCounter()
+    {
+        return $this->hasOne(VacationCounter::class);
+    }
+
+    public function getAuthIdentifier()
+    {
+        return $this->username;
+    }
+
+    public function getAuthIdentifierName()
+    {
+        return $this->username;
+    }
+
+    public function getAuthPassword()
+    {
+        return "";
+    }
+
+    public function getRememberToken()
+    {
+    }
+
+    public function setRememberToken($value)
+    {
+    }
+
+    public function getRememberTokenName()
+    {
+        return "";
     }
 
 
