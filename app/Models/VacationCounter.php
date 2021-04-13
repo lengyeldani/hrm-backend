@@ -13,6 +13,7 @@ class VacationCounter extends Model
     protected $id;
     protected $max;
     protected $used;
+    protected $remaining;
 
     public function user()
     {

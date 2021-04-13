@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Http\Resources\UserWithAllResource;
 use App\Http\Resources\VacationResource;
 use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationStatus;
+use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class VacationController extends Controller
@@ -33,14 +34,44 @@ class VacationController extends Controller
      */
     public function store(Request $request)
     {
-        $vacation = new Vacation();
-        $vacation->date = $request->date;
-        $vacationStatus = VacationStatus::findOrFail(1);
-        $vacation->vacationStatus()->associate($vacationStatus);
-        $user = User::findOrFail($request->userId);
-        $user->vacations()->save($vacation);
 
-        return response($vacation,200);
+
+        $start = new DateTime($request->start);
+        $end = new DateTime($request->end);
+        $interval = $start->diff($end);
+        $interval = (integer)$interval->format('%a') + 1;
+        $user = User::findOrFail($request->userId);
+
+        $reservedStart = Vacation::where('user_id',$user->id)->
+        whereDate('start','<=', date($request->start))->
+        whereDate('end','>=',date($request->start))->
+        first();
+
+        $reservedEnd = Vacation::where('user_id',$user->id)->
+        whereDate('start','<=', date($request->end))->
+        whereDate('end','>=',date($request->end))->
+        first();
+
+        if($reservedStart !== null || $reservedEnd !== null){
+            return response('',409);
+        }
+
+        if($user->vacationCounter->remaining - $interval >= 0){
+            $vacation = new Vacation();
+            $vacation->start = $start;
+            $vacation->end = $end;
+            $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
+            $vacation->vacationStatus()->associate($vacationStatus);
+            $user->vacationCounter->used = $user->vacationCounter->used + $interval;
+            $user->vacationCounter->remaining = $user->vacationCounter->remaining - $interval;
+            $user->push();
+            $user->vacations()->save($vacation);
+
+            return response($vacation,200);
+        }
+        else{
+            return response('',400);
+        }
     }
 
     /**
@@ -64,13 +95,18 @@ class VacationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $vacation = Vacation::findOrFail($id);
-        $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
-        $vacation->vacationStatus()->associate($vacationStatus);
-        $user = User::findOrFail($vacation->user_id);
-        $user->vacations()->save($vacation);
+        if(Auth::user()->role_id>3){
 
-        return response($vacation,200);
+            $vacation = Vacation::findOrFail($id);
+            $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
+            $vacation->vacationStatus()->associate($vacationStatus);
+            $user = User::findOrFail($vacation->user_id);
+            $user->vacations()->save($vacation);
+            return response($vacation,200);
+        }
+        else{
+            return response('',401);
+        }
     }
 
     /**
@@ -91,16 +127,6 @@ class VacationController extends Controller
         return response($vacation,200);
     }
 
-    public function changeVacationStatus(Request $request)
-    {
-        $vacation = Vacation::findOrFail($request->vacation_id);
-        $status= VacationStatus::findOrFail($request->status_id);
-        $vacation->vacationStatus()->associate($status);
-        $user = User::findOrFail($vacation->user_id);
-        $user->vacations()->save($vacation);
-
-        return response($vacation, 200);
-    }
 
     public function vacationStatuses()
     {

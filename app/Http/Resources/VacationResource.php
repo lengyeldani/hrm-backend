@@ -16,9 +16,16 @@ class VacationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $max = User::findOrFail($this->user_id)->vacationCounter->max;
+        $used = User::findOrFail($this->user_id)->vacationCounter->used;
+        $remaining = User::findOrFail($this->user_id)->vacationCounter->remaining;
         return [
             'id' => $this->id,
-            'date'=>$this->date,
+            'start'=>$this->start,
+            'end'=>$this->end,
+            'max'=> $max,
+            'used'=>$used,
+            'remaining'=>$remaining,
             'vacation_status'=>VacationStatus::findOrFail($this->vacation_status_id)
         ];
     }

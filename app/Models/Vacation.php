@@ -11,7 +11,9 @@ class Vacation extends Model
     public $timestamps = false;
     protected $table = 'vacations';
     protected $id;
-    protected $date;
+    protected $start;
+    protected $end;
+
 
     public function user()
     {

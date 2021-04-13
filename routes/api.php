@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-//Route::middleware(['auth'])->group(function (){
+Route::middleware(['auth'])->group(function (){
     Route::prefix('users')->group(function (){
         Route::get('index', [UserController::class, 'index']);
         Route::post('store', [UserController::class, 'store']);
@@ -38,7 +38,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::get('show/{id}', [VacationController::class, 'show']);
         Route::put('update/{id}', [VacationController::class, 'update']);
         Route::get('showByUser/{id}', [VacationController::class, 'showByUser']);
-        Route::post('changeVacationStatus', [VacationController::class, 'changeVacationStatus']);
         Route::get('vacationStatuses', [VacationController::class, 'vacationStatuses']);
     });
 
@@ -49,5 +48,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::put('update/{id}', [EducationController::class, 'update']);
         Route::get('showByUser/{id}', [EducationController::class, 'showByUser']);
     });
-//});
+});
 

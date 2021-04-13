@@ -26,6 +26,9 @@ class VacationStatusSeeder extends Seeder
             ],
             [
                 'name' => 'cancelled'
+            ],
+            [
+                'name' => 'forced'
             ]
 
         ]);

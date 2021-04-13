@@ -48,6 +48,7 @@ class UserController extends Controller
         $vacationCounter = new VacationCounter();
         $vacationCounter->max = $request->vacationCounter_max;
         $vacationCounter->used = 0;
+        $vacationCounter->remaining = $request->vacationCounter_max;
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
         $user->createdAt = new DateTime();

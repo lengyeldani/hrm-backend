@@ -15,10 +15,10 @@ class CreateVacationsTable extends Migration
     {
         Schema::create('vacations', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('date');
+            $table->date('start');
+            $table->date('end');
             $table->foreignId('user_id');
             $table->foreignId('vacation_status_id')->default(1);
-            $table->unique(['user_id','date']);
         });
     }
 

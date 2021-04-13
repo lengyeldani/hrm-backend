@@ -17,6 +17,7 @@ class CreateVacationCountersTable extends Migration
             $table->increments('id');
             $table->integer('max');
             $table->integer('used');
+            $table->integer('remaining');
             $table->foreignId('user_id')->unique();
         });
     }
