@@ -9,9 +9,11 @@ use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationCounter;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserWithAllResource extends JsonResource
+class UserWithAllResource extends ResourceCollection
 {
+    public $collects = User::class;
     /**
      * Transform the resource into an array.
      *
@@ -20,28 +22,31 @@ class UserWithAllResource extends JsonResource
      */
     public function toArray($request)
     {
-        $max = User::findOrFail($this->id)->vacationCounter->max;
-        $used = User::findOrFail($this->id)->vacationCounter->used;
-        $remaining = $max-$used;
-
+        dd($this->collection);
+        // $max = User::findOrFail($this->id)->vacationCounter->max;
+        // $used = User::findOrFail($this->id)->vacationCounter->used;
+        // $remaining = $max-$used;
         return [
-            'id'=>$this->id,
-            'firstName'=>$this->firstName,
-            'lastName'=>$this->lastName,
-            'dateOfBirth'=>$this->dateOfBirth,
-            'mothersFirstName'=>$this->mothersFirstName,
-            'mothersLastName'=>$this->mothersLastName,
-            'department'=>Department::findOrFail($this->department_id),
-            'address'=>$this->address,
-            'zipCode'=>$this->zipCode,
-            'role'=>Role::findOrFail($this->role_id),
-            'vacationCounter'=>VacationCounter::where('user_id', $this->id)->get(),
-            'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
-            'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
-            'createdAt'=>$this->createdAt,
-            'updatedAt'=>$this->updatedAt,
-            'used'=>$used,
-            'remaining'=> $remaining,
-        ];
+            'data'=>[
+                'id'=>$this->id,
+                'firstName'=>$this->firstName,
+                'lastName'=>$this->lastName,
+                'dateOfBirth'=>$this->dateOfBirth,
+                'mothersFirstName'=>$this->mothersFirstName,
+                'mothersLastName'=>$this->mothersLastName,
+                'department'=>Department::findOrFail($this->department_id),
+                'address'=>$this->address,
+                'zipCode'=>$this->zipCode,
+                'role'=>Role::findOrFail($this->role_id),
+                'vacationCounter'=>VacationCounter::where('user_id', $this->id)->get(),
+                'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
+                'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
+                'createdAt'=>$this->createdAt,
+                'updatedAt'=>$this->updatedAt,
+                // 'used'=>$used,
+                // 'remaining'=> $remaining,
+            ]
+            ];
+
     }
 }

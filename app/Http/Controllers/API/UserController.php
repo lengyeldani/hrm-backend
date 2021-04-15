@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserWithAllResource;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -113,6 +115,13 @@ class UserController extends Controller
         User::destroy($id);
 
         return response(User::findOrFail($id),200);
+    }
+
+    public function employeesByDepartment()
+    {
+        $employeesByDepartment = new UserCollection(User::where('department_id',Auth::user()->department_id)->paginate(10));
+
+        return response($employeesByDepartment,200);
     }
 
     public function getLoggedInUser()

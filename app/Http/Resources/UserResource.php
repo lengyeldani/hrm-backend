@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Department;
 use App\Models\Education;
 use App\Models\Role;
+use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationCounter;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,6 +20,9 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $max = User::findOrFail($this->id)->vacationCounter->max;
+        $used = User::findOrFail($this->id)->vacationCounter->used;
+        $remaining = $max-$used;
 
         return [
             'id'=>$this->id,
@@ -32,8 +36,12 @@ class UserResource extends JsonResource
             'zipCode'=>$this->zipCode,
             'role'=>Role::findOrFail($this->role_id),
             'vacationCounter'=>VacationCounter::where('user_id', $this->id)->get(),
+            'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
+            'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
             'createdAt'=>$this->createdAt,
-            'updatedAt'=>$this->updatedAt
+            'updatedAt'=>$this->updatedAt,
+            'used'=>$used,
+            'remaining'=> $remaining,
         ];
     }
 }

@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function (){
         Route::get('loggedInUser', [UserController::class, 'getLoggedInUser']);
         Route::get('roles', [UserController::class, 'getUserRoles']);
         Route::get('departments',[UserController::class,'getDepartments']);
+        Route::get('employeesByDepartment', [UserController::class,'employeesByDepartment']);
     });
 
     Route::prefix('vacations')->group(function (){
