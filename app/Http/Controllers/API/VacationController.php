@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserWithAllResource;
+use App\Http\Resources\VacationCollection;
 use App\Http\Resources\VacationResource;
 use App\Models\User;
 use App\Models\Vacation;
@@ -22,7 +24,7 @@ class VacationController extends Controller
      */
     public function index()
     {
-        return response(UserWithAllResource::collection(User::paginate(10)));
+        return response(new UserCollection((User::paginate(10))),200);
     }
 
 
@@ -122,7 +124,7 @@ class VacationController extends Controller
 
     public function showByUser($id)
     {
-        $vacation = VacationResource::collection(Vacation::where('user_id',$id)->paginate(10));
+        $vacation = new VacationCollection(Vacation::where('user_id',$id)->paginate(10));
 
         return response($vacation,200);
     }
