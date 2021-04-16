@@ -97,7 +97,12 @@ class UserController extends Controller
         $user->role()->associate($role);
         $user->zipCode = $request->zipCode;
         $user->address = $request->address;
+        $user->vacationCounter()->update([
+            'max'=>$request->vacationCounter_max,
+            'remaining'=>$user->vacationCounter->remaining + ($request->vacationCounter_max - $user->vacationCounter->max)
+            ]);
         $user->updatedAt = new DateTime();
+        $user->refresh();
         $user->save();
 
         return response($user, 200);
