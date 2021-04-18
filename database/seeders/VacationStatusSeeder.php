@@ -16,19 +16,19 @@ class VacationStatusSeeder extends Seeder
     {
         DB::table('vacation_statuses')->insert([
             [
-                'name' => 'pending'
+                'name' => 'függőben'
             ],
             [
-                'name' => 'accepted'
+                'name' => 'elfogadva'
             ],
             [
-                'name' => 'declined'
+                'name' => 'elutasítva'
             ],
             [
-                'name' => 'cancelled'
+                'name' => 'visszavonva'
             ],
             [
-                'name' => 'forced'
+                'name' => 'kötelező'
             ]
 
         ]);

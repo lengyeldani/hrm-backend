@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\UserWithAllResource;
 use App\Http\Resources\VacationCollection;
 use App\Http\Resources\VacationResource;
@@ -97,17 +98,73 @@ class VacationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(Auth::user()->role_id>3){
 
-            $vacation = Vacation::findOrFail($id);
-            $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
-            $vacation->vacationStatus()->associate($vacationStatus);
-            $user = User::findOrFail($vacation->user_id);
-            $user->vacations()->save($vacation);
-            return response($vacation,200);
+        if(Auth::user()->role_id>3){
+            if($request->vacationStatus === "1" || $request->vacationStatus === "2" || $request->vacationStatus === "5"){
+                $vacation = Vacation::findOrFail($id);
+                $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
+                $vacation->vacationStatus()->associate($vacationStatus);
+                $user = User::findOrFail($vacation->user_id);
+                $user->vacations()->save($vacation);
+                return response($vacation,200);
+            }
+            else if($request->vacationStatus === "3" || $request->vacationStatus === "4"){
+                $this->deleteVacation($id, $request->vacationStatus);
+            }
+
         }
         else{
             return response('',401);
+        }
+    }
+
+    private function deleteVacation($id, $vacationStatus)
+    {
+        $vacation = Vacation::findOrFail($id);
+
+        $user = User::findOrFail($vacation->user_id);
+
+        $start = new DateTime($vacation->start);
+        $end = new DateTime($vacation->end);
+        $interval = $start->diff($end);
+        $interval = (integer)$interval->format('%a') + 1;
+
+        $user->vacationCounter->used -= $interval;
+        $user->vacationCounter->remaining += $interval;
+        $user->push();
+        $vacationStatus = VacationStatus::findOrFail($vacationStatus);
+        $vacation->vacationStatus()->associate($vacationStatus);
+        $user = User::findOrFail($vacation->user_id);
+        $user->vacations()->save($vacation);
+        $vacation->delete();
+
+        return response($vacation, 200);
+
+    }
+
+    public function cancelVacation($id)
+    {
+
+        $vacation = Vacation::findOrFail($id);
+
+        if($vacation->vacation_status_id === 1){
+
+            $user = User::findOrFail($vacation->user_id);
+
+            $start = new DateTime($vacation->start);
+            $end = new DateTime($vacation->end);
+            $interval = $start->diff($end);
+            $interval = (integer)$interval->format('%a') + 1;
+
+            $user->vacationCounter->used -= $interval;
+            $user->vacationCounter->remaining += $interval;
+            $user->push();
+
+            $vacation->delete();
+            return response('', 200);
+        }
+        else{
+            return response('',400);
         }
     }
 
@@ -124,7 +181,7 @@ class VacationController extends Controller
 
     public function showByUser($id)
     {
-        $vacation = new VacationCollection(Vacation::where('user_id',$id)->paginate(10));
+        $vacation = new VacationCollection(Vacation::where('user_id',$id)->orderBy('end','ASC')->paginate(10));
 
         return response($vacation,200);
     }

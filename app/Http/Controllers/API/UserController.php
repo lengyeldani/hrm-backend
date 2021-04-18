@@ -23,7 +23,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('deleted_at', null)->paginate(10);
+        $users = new UserCollection(User::where('deleted_at', null)->paginate(10));
         return response($users,200);
     }
 
@@ -102,8 +102,8 @@ class UserController extends Controller
             'remaining'=>$user->vacationCounter->remaining + ($request->vacationCounter_max - $user->vacationCounter->max)
             ]);
         $user->updatedAt = new DateTime();
-        $user->refresh();
         $user->save();
+        $user->refresh();
 
         return response($user, 200);
     }
@@ -116,10 +116,13 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        try {
+            User::destroy($id);
+        } catch (\Throwable $th) {
+            return response($th,405);
+        }
 
-        User::destroy($id);
-
-        return response(User::findOrFail($id),200);
+        return response('',200);
     }
 
     public function employeesByDepartment()

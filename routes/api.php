@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VacationController;
+use App\Models\VacationCounter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->group(function (){
         Route::put('update/{id}', [VacationController::class, 'update']);
         Route::get('showByUser/{id}', [VacationController::class, 'showByUser']);
         Route::get('vacationStatuses', [VacationController::class, 'vacationStatuses']);
+        Route::get('cancelVacation/{id}', [VacationController::class, 'cancelVacation']);
     });
 
     Route::prefix('educations')->group(function (){

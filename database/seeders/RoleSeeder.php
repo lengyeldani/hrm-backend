@@ -25,10 +25,10 @@ class RoleSeeder extends Seeder
                 'name' => 'e3'
             ],
             [
-                'name'=> 'boss'
+                'name'=> 'osztályvezető'
             ],
             [
-                'name'=> 'admin'
+                'name'=> 'adminisztrátor'
             ]
 
         ]);
