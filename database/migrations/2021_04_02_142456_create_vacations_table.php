@@ -19,7 +19,6 @@ class CreateVacationsTable extends Migration
             $table->date('end');
             $table->foreignId('user_id');
             $table->foreignId('vacation_status_id')->default(1);
-            $table->softDeletes();
         });
     }
 

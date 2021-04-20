@@ -100,17 +100,33 @@ class VacationController extends Controller
     {
 
         if(Auth::user()->role_id>3){
-            if($request->vacationStatus === "1" || $request->vacationStatus === "2" || $request->vacationStatus === "5"){
-                $vacation = Vacation::findOrFail($id);
-                $vacationStatus = VacationStatus::findOrFail($request->vacationStatus);
-                $vacation->vacationStatus()->associate($vacationStatus);
-                $user = User::findOrFail($vacation->user_id);
-                $user->vacations()->save($vacation);
-                return response($vacation,200);
+
+            $vacation = Vacation::findOrFail($id);
+            $user = User::findOrFail($vacation->user_id);
+            $vacationStatus = VacationStatus::findOrFail((integer)$request->vacationStatus);
+            $start = new DateTime($vacation->start);
+            $end = new DateTime($vacation->end);
+            $interval = $start->diff($end);
+            $interval = (integer)$interval->format('%a') + 1;
+
+            if($user->vacationCounter->remaining - $interval >= 0){
+                if((integer)$request->vacationStatus === 1 || (integer)$request->vacationStatus === 2 || (integer)$request->vacationStatus === 5){
+                    $user->vacationCounter->used += $interval;
+                    $user->vacationCounter->remaining -= $interval;
+                    $user->push();
+                    $vacation->vacationStatus()->associate($vacationStatus);
+                    $user->vacations()->save($vacation);
+                    return response($vacation,200);
+                }
             }
-            else if($request->vacationStatus === "3" || $request->vacationStatus === "4"){
-                $this->deleteVacation($id, $request->vacationStatus);
-            }
+        else if((integer)$request->vacationStatus === 3 || (integer)$request->vacationStatus === 4 ){
+            $user->vacationCounter->used -= $interval;
+            $user->vacationCounter->remaining += $interval;
+            $user->push();
+            $vacation->vacationStatus()->associate($vacationStatus);
+            $user = User::findOrFail($vacation->user_id);
+            $user->vacations()->save($vacation);
+        }
 
         }
         else{
@@ -118,29 +134,6 @@ class VacationController extends Controller
         }
     }
 
-    private function deleteVacation($id, $vacationStatus)
-    {
-        $vacation = Vacation::findOrFail($id);
-
-        $user = User::findOrFail($vacation->user_id);
-
-        $start = new DateTime($vacation->start);
-        $end = new DateTime($vacation->end);
-        $interval = $start->diff($end);
-        $interval = (integer)$interval->format('%a') + 1;
-
-        $user->vacationCounter->used -= $interval;
-        $user->vacationCounter->remaining += $interval;
-        $user->push();
-        $vacationStatus = VacationStatus::findOrFail($vacationStatus);
-        $vacation->vacationStatus()->associate($vacationStatus);
-        $user = User::findOrFail($vacation->user_id);
-        $user->vacations()->save($vacation);
-        $vacation->delete();
-
-        return response($vacation, 200);
-
-    }
 
     public function cancelVacation($id)
     {

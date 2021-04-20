@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vacation extends Model
 {
-    use SoftDeletes;
     use HasFactory;
     public $timestamps = false;
     protected $table = 'vacations';
