@@ -35,37 +35,42 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $match = User::where('username',strtoupper($request->username))->first();
 
-        try {
-            $user = new User();
-            $user->firstName = $request->firstName;
-            $user->lastName = $request->lastName;
-            $user->username = strtoupper($request->username);
-            $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
-            $user->mothersFirstName = $request->mothersFirstName;
-            $user->mothersLastName = $request->mothersLastName;
-            $department = Department::findOrFail($request->department);
-            $user->department()->associate($department);
-            $role = Role::findOrFail($request->role);
-            $user->role()->associate($role);
-            $vacationCounter = new VacationCounter();
-            $vacationCounter->max = $request->vacationCounter_max;
-            $vacationCounter->used = 0;
-            $vacationCounter->remaining = $request->vacationCounter_max;
-            $user->zipCode = $request->zipCode;
-            $user->address = $request->address;
-            $user->createdAt = new DateTime();
-            $user->updatedAt = null;
-            $user->save();
-            $user->refresh();
-            $user->findOrFail($user->id)->vacationCounter()->save($vacationCounter);
-        } catch (\Throwable $th) {
-            return response($th,400);
+        if(!$match){
+            try {
+                $user = new User();
+                $user->firstName = $request->firstName;
+                $user->lastName = $request->lastName;
+                $user->username = strtoupper($request->username);
+                $user->dateOfBirth = DateTime::createFromFormat('Y-m-d',$request->dateOfBirth);
+                $user->mothersFirstName = $request->mothersFirstName;
+                $user->mothersLastName = $request->mothersLastName;
+                $department = Department::findOrFail($request->department);
+                $user->department()->associate($department);
+                $role = Role::findOrFail($request->role);
+                $user->role()->associate($role);
+                $vacationCounter = new VacationCounter();
+                $vacationCounter->max = $request->vacationCounter_max;
+                $vacationCounter->used = 0;
+                $vacationCounter->remaining = $request->vacationCounter_max;
+                $user->zipCode = $request->zipCode;
+                $user->address = $request->address;
+                $user->createdAt = new DateTime();
+                $user->updatedAt = null;
+                $user->save();
+                $user->refresh();
+                $user->findOrFail($user->id)->vacationCounter()->save($vacationCounter);
+            } catch (\Throwable $th) {
+                return response($th,400);
+            }
+            return response($user,200);
         }
+        else return response('',403);
 
 
 
-        return response($user,200);
+
     }
 
     /**

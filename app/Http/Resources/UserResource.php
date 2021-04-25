@@ -20,9 +20,6 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $max = User::findOrFail($this->id)->vacationCounter->max;
-        $used = User::findOrFail($this->id)->vacationCounter->used;
-        $remaining = $max-$used;
 
         return [
             'id'=>$this->id,
@@ -40,9 +37,7 @@ class UserResource extends JsonResource
             'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
             'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
             'createdAt'=>$this->createdAt,
-            'updatedAt'=>$this->updatedAt,
-            'used'=>$used,
-            'remaining'=> $remaining,
+            'updatedAt'=>$this->updatedAt
         ];
     }
 }

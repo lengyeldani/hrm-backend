@@ -16,13 +16,13 @@ class RoleSeeder extends Seeder
     {
         DB::table('roles')->insert([
             [
-                'name' => 'e1'
+                'name' => 'beszerző'
             ],
             [
-                'name' => 'e2'
+                'name' => 'logisztikus'
             ],
             [
-                'name' => 'e3'
+                'name' => 'gyártó'
             ],
             [
                 'name'=> 'osztályvezető'

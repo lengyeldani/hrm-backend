@@ -174,7 +174,7 @@ class VacationController extends Controller
 
     public function showByUser($id)
     {
-        $vacation = new VacationCollection(Vacation::where('user_id',$id)->orderBy('end','ASC')->paginate(10));
+        $vacation = new VacationCollection(Vacation::where('user_id',$id)->orderBy('end','DESC')->paginate(10));
 
         return response($vacation,200);
     }

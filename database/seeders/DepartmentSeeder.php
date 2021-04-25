@@ -16,13 +16,19 @@ class DepartmentSeeder extends Seeder
     {
         DB::table('departments')->insert([
             [
-                'name' => 'dep1'
+                'name' => 'HRM1'
             ],
             [
-                'name' => 'dep2'
+                'name' => 'HRM2'
             ],
             [
-                'name' => 'dep3'
+                'name' => 'HRM3'
+            ],
+            [
+                'name' => 'HRM4'
+            ],
+            [
+                'name' => 'HRM5'
             ]
 
         ]);
