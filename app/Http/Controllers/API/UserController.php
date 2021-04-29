@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserWithAllResource;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\User;
@@ -12,7 +11,6 @@ use App\Models\VacationCounter;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {

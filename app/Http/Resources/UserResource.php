@@ -3,9 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Department;
-use App\Models\Education;
 use App\Models\Role;
-use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationCounter;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -20,7 +18,6 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id'=>$this->id,
             'firstName'=>$this->firstName,
@@ -35,7 +32,6 @@ class UserResource extends JsonResource
             'role'=>Role::findOrFail($this->role_id),
             'vacationCounter'=>VacationCounter::where('user_id', $this->id)->first(),
             'vacations'=>VacationResource::collection(Vacation::where('user_id',$this->id)->get()),
-            'educations'=> EducationResource::collection(Education::where('user_id',$this->id)->get()),
             'createdAt'=>$this->createdAt,
             'updatedAt'=>$this->updatedAt
         ];

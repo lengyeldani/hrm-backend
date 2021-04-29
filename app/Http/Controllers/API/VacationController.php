@@ -4,17 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\UserWithAllResource;
 use App\Http\Resources\VacationCollection;
-use App\Http\Resources\VacationResource;
 use App\Models\User;
 use App\Models\Vacation;
 use App\Models\VacationStatus;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class VacationController extends Controller
 {
@@ -100,7 +96,6 @@ class VacationController extends Controller
     {
 
         if(Auth::user()->role_id>3){
-
             $vacation = Vacation::findOrFail($id);
             $user = User::findOrFail($vacation->user_id);
             $vacationStatus = VacationStatus::findOrFail((integer)$request->vacationStatus);
@@ -111,23 +106,32 @@ class VacationController extends Controller
 
             if($user->vacationCounter->remaining - $interval >= 0){
                 if((integer)$request->vacationStatus === 1 || (integer)$request->vacationStatus === 2 || (integer)$request->vacationStatus === 5){
-                    $user->vacationCounter->used += $interval;
-                    $user->vacationCounter->remaining -= $interval;
+                    if($vacation->vacation_status_id === 3){
+                        $user->vacationCounter->used += $interval;
+                        $user->vacationCounter->remaining -= $interval;
+                        $user->push();
+                        $vacation->vacationStatus()->associate($vacationStatus);
+                        $user->vacations()->save($vacation);
+                        $vacation->refresh();
+                        return response($vacation,200);
+                    }
+                    else{
+                        $vacation->vacationStatus()->associate($vacationStatus);
+                        $user->vacations()->save($vacation);
+                        $vacation->refresh();
+                        return response($vacation,200);
+                    }
+                }
+                else if((integer)$request->vacationStatus === 3){
+                    $user->vacationCounter->used -= $interval;
+                    $user->vacationCounter->remaining += $interval;
                     $user->push();
                     $vacation->vacationStatus()->associate($vacationStatus);
                     $user->vacations()->save($vacation);
+                    $vacation->refresh();
                     return response($vacation,200);
                 }
             }
-        else if((integer)$request->vacationStatus === 3 || (integer)$request->vacationStatus === 4 ){
-            $user->vacationCounter->used -= $interval;
-            $user->vacationCounter->remaining += $interval;
-            $user->push();
-            $vacation->vacationStatus()->associate($vacationStatus);
-            $user = User::findOrFail($vacation->user_id);
-            $user->vacations()->save($vacation);
-        }
-
         }
         else{
             return response('',401);
@@ -161,22 +165,17 @@ class VacationController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function showByUser($id)
     {
         $vacation = new VacationCollection(Vacation::where('user_id',$id)->orderBy('end','DESC')->paginate(10));
 
         return response($vacation,200);
+    }
+
+    public function vacationStatusesForManager()
+    {
+        $vacationStatuses = VacationStatus::where('id','!=',4)->get();
+        return response($vacationStatuses, 200);
     }
 
 

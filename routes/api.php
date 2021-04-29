@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\API\EducationController;
+
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VacationController;
-use App\Models\VacationCounter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,14 +41,8 @@ Route::middleware(['auth'])->group(function (){
         Route::get('showByUser/{id}', [VacationController::class, 'showByUser']);
         Route::get('vacationStatuses', [VacationController::class, 'vacationStatuses']);
         Route::get('cancelVacation/{id}', [VacationController::class, 'cancelVacation']);
+        Route::get('vacationStatusesForManager', [VacationController::class, 'vacationStatusesForManager']);
     });
 
-    Route::prefix('educations')->group(function (){
-        Route::get('index', [EducationController::class, 'index']);
-        Route::post('store', [EducationController::class, 'store']);
-        Route::get('show/{id}', [EducationController::class, 'show']);
-        Route::put('update/{id}', [EducationController::class, 'update']);
-        Route::get('showByUser/{id}', [EducationController::class, 'showByUser']);
-    });
 });
 
